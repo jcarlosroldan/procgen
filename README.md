@@ -28,9 +28,7 @@ Since big API changes are expected, documentation is not available yet. We will 
 
 ## Contribute
 
-By January 2018, a 1.0 stable version will be released, a proper branch workflow will be used, and contributions will be open.
-
-Adventurous coders can contact with [juancarlos@sevilla.es](mailto:juancarlos@sevilla.es) to contribute in this wild, unstable stage.
+By January 2018, a 1.0 stable version will be released, a proper branch workflow will be used, and contributions will be open. Adventurous coders can contact with [juancarlos@sevilla.es](mailto:juancarlos@sevilla.es) to contribute in this wild, unstable stage.
 
 ## Current work
 
