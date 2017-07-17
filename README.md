@@ -8,7 +8,7 @@ Procgen is a fast general purpose procedural generation library for Python. It c
 ## Requirements
 
 * Python 3.2+
-* Numpy 1.10+
+* Numpy 1.9+
 * Works on Linux, Windows, Mac OSX, BSD
 
 ## Install
