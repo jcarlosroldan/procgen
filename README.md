@@ -53,5 +53,5 @@ Our backlog is:
 7. Tree-placement algorithms
 8. Water-placement algorithms: rivers, lakes, wind-aware filling
 9. Test coverage for terrain functions
-10. Backlog update: Cellullar automata, L-systems, [boolean evaluation heightmap](https://sites.google.com/site/mddn442/research-topics/procedural-terrains-cities-and-worlds)...
+10. Backlog update: [Cellullar automata](https://www.hermetic.ch/pca/tg.htm), L-systems, [boolean evaluation heightmap](https://sites.google.com/site/mddn442/research-topics/procedural-terrains-cities-and-worlds)...
 11. Version 1.0 is reached: issue-driven development, pull requests opened, dev branch, examples in wiki, automatic tests, setup.py to use pip install git+git://
