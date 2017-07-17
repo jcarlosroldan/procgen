@@ -3,7 +3,7 @@ Procgen: Procedural generation library
 
 Procgen is a fast general purpose procedural generation library for Python. It can be used for a widde range of purposes, from terrain generation to generative art, both in 2D and 3D worlds.
 
-**Warning:** This library is currently under development. Several API changes are expected until an stable version is reached. You can also contribute if you wish! Just contact with [juancarlos@sevilla.es](mailto:juancarlos@sevilla.es).
+**Warning:** This library is currently under development. Several API changes are expected until an stable version is reached.
 
 ## Requirements
 
@@ -29,6 +29,8 @@ Since big API changes are expected, documentation is not available yet. We will 
 ## Contribute
 
 By January 2018, a 1.0 stable version will be released, a proper branch workflow will be used, and contributions will be open.
+
+Adventurous coders can contact with [juancarlos@sevilla.es](mailto:juancarlos@sevilla.es) to contribute in this wild, unstable stage.
 
 ## Current work
 
