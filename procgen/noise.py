@@ -1,4 +1,5 @@
 # PERLIN ----------------------------------------------------------------------
+from math import floor
 
 def perlin(x, y, z, octaves = 6, persistence = .5, lacunarity = 2):
 	""" Generate 3-D perlin noise. """
@@ -7,7 +8,7 @@ def perlin(x, y, z, octaves = 6, persistence = .5, lacunarity = 2):
 	amplitude = 1
 	max_val = 0
 	for i in range(octaves):
-		total += _perlin_octave_noise(x * freq, y * freq, z * freq) * amplitude
+		total += _perlin_octave(x * freq, y * freq, z * freq) * amplitude
 		max_val += amplitude
 		amplitude *= persistence
 		freq *= lacunarity
@@ -26,16 +27,16 @@ def _perlin_lerp(t, a, b):
 def _perlin_grad(hash, x, y, z):
 	""" Convert lo 4 bits of hash code into 12 gradient directions. """
 	h = hash & 0xF
-	u = x if h < 8 else y
-	v = y if h < 4 else (x if h == 12 or h == 14 else z)
-	return (u if h & 1 == 0 else -u) + (v if h & 2 == 0 else -v)
+	u = x if h < 0b1000 else y
+	v = y if h < 0b100 else (x if h == 0b1100 or h == 0b1110 else z)
+	return (u if h & 0b1 == 0 else -u) + (v if h & 0b10 == 0 else -v)
 
-def _perlin_octave_noise(x, y, z):
+def _perlin_octave(x, y, z):
 	""" Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002 """
 	# find unit cube that contains point
-	X = int(x) & 255
-	Y = int(y) & 255
-	Z = int(z) & 255
+	X = floor(x) & 0xFF
+	Y = floor(y) & 0xFF
+	Z = floor(z) & 0xFF
 	# find relative x, y, z of each point in cube
 	x = x % 1
 	y = y % 1
