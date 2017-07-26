@@ -7,7 +7,7 @@ def perlin(x, y, z, octaves = 6, persistence = .5, lacunarity = 2):
 	amplitude = 1
 	max_val = 0
 	for i in range(octaves):
-		total += _perlin_octave_noise(x*freq, y*freq, z*freq) * amplitude
+		total += _perlin_octave_noise(x * freq, y * freq, z * freq) * amplitude
 		max_val += amplitude
 		amplitude *= persistence
 		freq *= lacunarity
@@ -26,9 +26,9 @@ def _perlin_lerp(t, a, b):
 def _perlin_grad(hash, x, y, z):
 	""" Convert lo 4 bits of hash code into 12 gradient directions. """
 	h = hash & 0xF
-	u = x if h<8 else y
-	v = y if h<4 else (x if h==12 or h==14 else z)
-	return (u if h&1 == 0 else -u) + (v if h&2 == 0 else -v)
+	u = x if h < 8 else y
+	v = y if h < 4 else (x if h == 12 or h == 14 else z)
+	return (u if h & 1 == 0 else -u) + (v if h & 2 == 0 else -v)
 
 def _perlin_octave_noise(x, y, z):
 	""" Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002 """
@@ -45,12 +45,12 @@ def _perlin_octave_noise(x, y, z):
 	v = _perlin_fade(y)
 	w = _perlin_fade(z)
 	# hash coordinates of the 8 cube corners
-	A = _perlin_p[X  ]+Y
-	AA = _perlin_p[A]+Z
-	AB = _perlin_p[A+1]+Z
-	B = _perlin_p[X+1]+Y
-	BA = _perlin_p[B]+Z
-	BB = _perlin_p[B+1]+Z
+	A = _perlin_p[X] + Y
+	AA = _perlin_p[A] + Z
+	AB = _perlin_p[A + 1] + Z
+	B = _perlin_p[X + 1] + Y
+	BA = _perlin_p[B] + Z
+	BB = _perlin_p[B + 1] +Z
 	# add blended results from 8 corners of cube
 	return _perlin_lerp(
 		w,
@@ -59,25 +59,25 @@ def _perlin_octave_noise(x, y, z):
 			_perlin_lerp(
 				u,
 				_perlin_grad(_perlin_p[AA], x, y, z),
-				_perlin_grad(_perlin_p[BA], x-1, y, z)
+				_perlin_grad(_perlin_p[BA], x - 1, y, z)
 			),
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AB], x, y-1, z),
-				_perlin_grad(_perlin_p[BB], x-1, y-1, z)
+				_perlin_grad(_perlin_p[AB], x, y - 1, z),
+				_perlin_grad(_perlin_p[BB], x - 1, y - 1, z)
 			)
 		),
 		_perlin_lerp(
 			v,
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AA+1], x, y, z-1),
-				_perlin_grad(_perlin_p[BA+1], x-1, y, z-1)
+				_perlin_grad(_perlin_p[AA + 1], x, y, z - 1),
+				_perlin_grad(_perlin_p[BA + 1], x - 1, y, z - 1)
 			),
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AB+1], x, y-1, z-1),
-				_perlin_grad(_perlin_p[BB+1], x-1, y-1, z-1)
+				_perlin_grad(_perlin_p[AB + 1], x, y - 1, z - 1),
+				_perlin_grad(_perlin_p[BB + 1], x - 1, y - 1, z - 1)
 			)
 		)
 	)

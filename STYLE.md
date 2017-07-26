@@ -12,5 +12,6 @@ If you wish to contribute in this project, please follow these style guidelines:
 	2. The main function. This is the only non-optional field: `perlin(x, y, z)`
 	3. Every other façade: `perlin2D(x,y)`, `perlin1D(x)`
 	4. The auxiliar functions and variables, with a leading underscore, the name of the main function, and another underscore: `_perlin_lerp(t, a, b)`, `_perlin_p = [1, 2, 3]`
+6. Every function must be shortly documented (even auxiliar ones): `""" Linear interpolation """`, public functions will be properly documented at docs generation stage of the project
 
 The easier way to learn this style is [checking an example](./procgen/noise.py).
