@@ -7,7 +7,7 @@ from random import randint, random
 from time import time
 from math import sin, pi
 
-def functional():
+def perlin3D_functional():
 	print("Testing octave known values from original Java Improved Perlin")
 	assert perlin3D(.5, .5, .5) == -0.25, "Midpoint values don't match"
 	assert perlin3D(.0001, .001, .01) == 0.010109641532713891, "Small values don't match"
@@ -17,7 +17,7 @@ def functional():
 	assert perlin3D(-12.3, -4.56, -.789) == 0.6118981098223655, "Negative values don't match"
 	print("\tAll values working properly")
 
-def performance1():
+def perlin3D_performance():
 	print("Testing time to fill a 200x200 array with default parameters")
 	base = time()
 	N = 200
@@ -26,7 +26,7 @@ def performance1():
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 3
 
-def performance2():
+def perlin3D_performance2():
 	print("Testing time to fill a 70x70 array with 15 octaves")
 	base = time()
 	N = 70
@@ -35,7 +35,7 @@ def performance2():
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 3
 
-def performance3():
+def perlin3D_performance3():
 	print("Testing time to fill a 30x30x30 array with default parameters")
 	base = time()
 	N = 30
@@ -44,7 +44,7 @@ def performance3():
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 3
 
-def subjective():
+def perlin3D_subjective():
 	print("Displaying 2D perlin output")
 	N = 100
 	pmap = [[combined(perlin3D, x/N, y/N, 0) for x in range(N)] for y in range(N)]
@@ -70,8 +70,8 @@ def subjective():
 	
 	plt.show()
 
-functional()
-performance1()
-performance2()
-performance3()
-subjective()
+perlin3D_functional()
+perlin3D_performance1()
+perlin3D_performance2()
+perlin3D_performance3()
+perlin3D_subjective()
