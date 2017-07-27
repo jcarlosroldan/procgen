@@ -26,15 +26,6 @@ def perlin2D_functional():
 	assert perlin2D(-12.3, -4.56) == perlin3D(-12.3, -4.56, 0), "Negative values don't match"
 	print("\tAll values working properly")
 
-"""def perlin4D_functional():
-	print("Testing octave known values from Perlin 4D")
-	assert perlin4D(.5, .5, .5, .5) == 0.2853462173341185, "Midpoint values don't match"
-	assert perlin4D(.0001, .001, .01, .1) == 0.057808284276409806, "Small values don't match"
-	assert perlin4D(1000.7, 1000.5, 1000.3, 1000.1) == -0.02126810949214044, "Big values don't match"
-	assert perlin4D(18, 27, 31, 501) == -0.03761175258869856, "Integer values don't match"
-	assert perlin4D(-12.3, -4.56, -.789, .818) == -0.32345225144839684, "Negative values don't match"
-	print("\tAll values working properly")"""
-
 def perlin2D_performance():
 	print("Testing time to fill a 200x200 array with default parameters")
 	base = time()
@@ -99,9 +90,7 @@ def perlin2D_subjective():
 
 perlin2D_functional()
 perlin3D_functional()
-#perlin4D_functional()
 perlin2D_performance()
 perlin2D_performance2()
 perlin3D_performance()
-#perlin4D_performance()
 perlin2D_subjective()
