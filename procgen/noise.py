@@ -1,5 +1,5 @@
 # PERLIN ----------------------------------------------------------------------
-from math import floor
+from math import floor, sqrt
 
 def perlin(x, y, z, octaves = 6, persistence = .5, lacunarity = 2):
 	""" Generate 3-D perlin noise. """
@@ -84,9 +84,18 @@ def _perlin_octave(x, y, z):
 	)
 
 # SIMPLEX ---------------------------------------------------------------------
+
 grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
 			[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
 			[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]
+grad4= [[0,1,1,1],[0,1,1,-1],[0,1,-1,1],[0,1,-1,-1],
+			[0,-1,1,1],[0,-1,1,-1],[0,-1,-1,1],[0,-1,-1,-1],
+			[1,0,1,1],[1,0,1,-1],[1,0,-1,1],[1,0,-1,-1],
+			[-1,0,1,1],[-1,0,1,-1],[-1,0,-1,1],[-1,0,-1,-1],
+			[1,1,0,1],[1,1,0,-1],[1,-1,0,1],[1,-1,0,-1],
+			[-1,1,0,1],[-1,1,0,-1],[-1,-1,0,1],[-1,-1,0,-1],
+			[1,1,1,0],[1,1,-1,0],[1,-1,1,0],[1,-1,-1,0],
+			[-1,1,1,0],[-1,1,-1,0],[-1,-1,1,0],[-1,-1,-1,0]]
 p = [151,160,137,91,90,15,
 	131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
 	190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
@@ -100,17 +109,81 @@ p = [151,160,137,91,90,15,
 	251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
 	49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 	138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180]
+F2 = 0.5*(sqrt(3.0)-1.0)
+G2 = (3.0-sqrt(3.0))/6.0
+F3 = 1.0/3.0
+G3 = 1.0/6.0
+F4 = (sqrt(5.0)-1.0)/4.0
+G4 = (5.0-sqrt(5.0))/20.0
+
 perm = []
 permMod12 = []
 for i in range(512):
 	perm.append(p[i & 255])
 	permMod12.append(int((perm[i] % 12)))
 
-def simplex(xin,yin,zin):
+def simplex2D(xin, yin):
+	""" Generate 2-D simplex noise. A Python version of the Stefan Gustavson 2012 JAVA implementation."""
+
+	s = (xin+yin)*F2
+	i = floor(xin+s)
+	j = floor(yin+s)
+	t = (i+j)*G2
+	#Unskew the cell origin back to (x,y) space
+	X0 = i-t 
+	Y0 = j-t
+	#The x,y distances from the cell origin
+	x0 = xin-X0 
+	y0 = yin-Y0
+	#For the 2D case, the simplex shape is an equilateral triangle.
+	#Determine which simplex we are in.
+	if x0>y0:
+		#lower triangle, XY order: (0,0)->(1,0)->(1,1)
+		i1, j1 = 1, 0
+	else: 
+		#upper triangle, YX order: (0,0)->(0,1)->(1,1)
+		i1, j1 = 0, 1
+	"""A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
+	a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
+	c = (3-sqrt(3))/6"""
+	#Offsets for middle corner in (x,y) unskewed coords
+	x1 = x0 - i1 + G2
+	y1 = y0 - j1 + G2
+	#Offsets for last corner in (x,y) unskewed coords
+	x2 = x0 - 1.0 + 2.0*G2
+	y2 = y0 - 1.0 + 2.0*G2
+	#Work out the hashed gradient indices of the three simplex corners
+	ii = i & 255
+	jj = j & 255
+	gi0 = permMod12[ii+perm[jj]]
+	gi1 = permMod12[ii+i1+perm[jj+j1]]
+	gi2 = permMod12[ii+1+perm[jj+1]]
+	#Calculate the contribution from the three corners
+	t0 = 0.5 - x0*x0 - y0*y0
+	if t0<0:
+		n0 = 0.0
+	else:
+		t0 *= t0
+		n0 = t0 * t0 * _dot2D(grad3[gi0], x0, y0)
+	t1 = 0.5 - x1*x1 - y1*y1
+	if t1<0: 
+		n1 = 0.0
+	else:
+		t1 *= t1
+		n1 = t1 * t1 * _dot2D(grad3[gi1], x1, y1)
+	t2 = 0.5 - x2*x2 - y2*y2
+	if t2<0:
+		n2 = 0.0
+	else:
+		t2 *= t2
+		n2 = t2 * t2 * _dot2D(grad3[gi2], x2, y2)
+	"""Add contributions from each corner to get the final noise value.
+	The result is scaled to stay just inside [-1,1]"""
+	return 70.0 * (n0 + n1 + n2)
+
+def simplex3D(xin,yin,zin):
 	""" Generate 3-D simplex noise. A Python version of the Stefan Gustavson 2012 JAVA implementation."""
 	
-	F3 = 1.0/3.0
-	G3 = 1.0/6.0
 	s = (xin+yin+zin)*F3
 	i = floor(xin+s)
 	j = floor(yin+s)
@@ -129,24 +202,24 @@ def simplex(xin,yin,zin):
 	if x0>=y0:
 		if y0>=z0:
 			# X Y Z order
-			i1,j1,k1,i2,j2,k2 = 1,0,0,1,1,0
+			i1, j1, k1, i2, j2, k2 = 1, 0, 0, 1, 1, 0
 		elif x0>=z0:
 			# X Z Y order
-			i1,j1,k1,i2,j2,k2 = 1,0,0,1,0,1
+			i1, j1, k1, i2, j2, k2 = 1, 0, 0, 1, 0, 1
 		else:
 			#Z X Y order
-			i1,j1,k1,i2,j2,k2 = 0,0,1,1,0,1
+			i1, j1, k1, i2, j2, k2 = 0, 0, 1, 1, 0, 1
 	else:
 		#x0<y0
 		if y0<z0:
 			# X Y Z order
-			i1,j1,k1,i2,j2,k2 = 0,0,1,0,1,1
+			i1, j1, k1, i2, j2, k2 = 0, 0, 1, 0, 1, 1
 		elif x0<z0:
 			# X Y Z order
-			i1,j1,k1,i2,j2,k2 = 0,1,0,0,1,1
+			i1, j1, k1, i2, j2, k2 = 0, 1, 0, 0, 1, 1
 		else:
 			# X Y Z order
-			i1,j1,k1,i2,j2,k2 = 0,1,0,1,1,0
+			i1, j1, k1, i2, j2, k2 = 0, 1, 0, 1, 1, 0
 	"""A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),
 	a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and
 	a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where
@@ -178,25 +251,25 @@ def simplex(xin,yin,zin):
 		n0 = 0.0
 	else:
 		t0 *= t0
-		n0 = t0 * t0 * _dot(grad3[gi0], x0, y0, z0)
+		n0 = t0 * t0 * _dot3D(grad3[gi0], x0, y0, z0)
 	t1 = 0.6 - x1*x1 - y1*y1 - z1*z1
 	if t1<0: 
 		n1 = 0.0
 	else:
 		t1 *= t1
-		n1 = t1 * t1 * _dot(grad3[gi1], x1, y1, z1)
+		n1 = t1 * t1 * _dot3D(grad3[gi1], x1, y1, z1)
 	t2 = 0.6 - x2*x2 - y2*y2 - z2*z2
 	if t2<0:
 		n2 = 0.0
 	else:
 		t2 *= t2
-		n2 = t2 * t2 * _dot(grad3[gi2], x2, y2, z2)
+		n2 = t2 * t2 * _dot3D(grad3[gi2], x2, y2, z2)
 	t3 = 0.6 - x3*x3 - y3*y3 - z3*z3
 	if t3<0:
 		n3 = 0.0
 	else:
 		t3 *= t3
-		n3 = t3 * t3 * _dot(grad3[gi3], x3, y3, z3)
+		n3 = t3 * t3 * _dot3D(grad3[gi3], x3, y3, z3)
 	"""Add contributions from each corner to get the final noise value.
 	The result is scaled to stay just inside [-1,1]"""
 	return 32.0*(n0 + n1 + n2 + n3)
@@ -208,7 +281,10 @@ def _fast_floor(x):
 	else:
 		return xi
 
-def _dot(g,x,y,z):
+def _dot2D(g,x,y):
+	return g[0]*x + g[1]*y
+
+def _dot3D(g,x,y,z):
 	return g[0]*x + g[1]*y + g[2]*z
 
 # OPENSIMPLEX -----------------------------------------------------------------
