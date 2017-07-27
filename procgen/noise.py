@@ -24,6 +24,21 @@ def combined(noise_function, x, y, z = None, w = None, octaves = 6, persistence 
 
 from math import floor
 
+def perlin1D(x):
+	""" Generate 1D perlin noise.
+	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
+	X = floor(x)
+	x = x - X
+	u = x - 1
+	A = (X+1) & 0xff 
+	X = X & 0xff
+
+	s = _perlin_fade(x)
+
+	n0 = _perlin_grad1D(perm[X], x)
+	n1 = _perlin_grad1D(perm[A], u)
+	return _perlin_lerp(s, n0, n1)
+
 def perlin2D(x, y):
 	""" Generate 2D perlin noise.
 	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
@@ -105,6 +120,101 @@ def perlin3D(x, y, z):
 		)
 	)
 
+def perlin4D(x, y, z, w):
+	""" Generate 4D perlin noise.
+	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
+	X = floor(x)
+	Y = floor(y)
+	Z = floor(z)
+	W = floor(w)
+
+	x = x - X
+	y = y - Y
+	z = z - Z
+	w = w - W
+
+	fx1 = x - 1
+	fy1 = y - 1
+	fz1 = z - 1
+	fw1 = w - 1
+
+	ix1 = (X + 1) & 0xff
+	iy1 = (Y + 1) & 0xff
+	iz1 = (Z + 1) & 0xff
+	iw1 = (W + 1) & 0xff
+
+	X = X & 0xff
+	Y = Y & 0xff
+	Z = Z & 0xff
+	W = W & 0xff
+
+	q = _perlin_fade(w)
+	r = _perlin_fade(z)
+	t = _perlin_fade(y)
+	s = _perlin_fade(x)
+
+	return _perlin_lerp(
+		s,
+		_perlin_lerp(
+			t,
+			_perlin_lerp(
+				r,
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[X + perm[Y + perm[Z + perm[W]]]], x, y, z, w),
+					_perlin_grad4D(perm[X + perm[Y + perm[Z + perm[iw1]]]], x, y, z, fw1)
+				),
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[X + perm[Y + perm[iz1 + perm[W]]]], x, y, fz1, w),
+					_perlin_grad4D(perm[X + perm[Y + perm[iz1 + perm[iw1]]]], x, y, fz1, fw1)
+				)
+			),
+			_perlin_lerp(
+				r,
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[X + perm[iy1 + perm[Z + perm[W]]]], x, fy1, z, w),
+					_perlin_grad4D(perm[X + perm[iy1 + perm[Z + perm[iw1]]]], x, fy1, z, fw1)
+				),
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[X + perm[iy1 + perm[iz1 + perm[W]]]], x, fy1, fz1, w),
+					_perlin_grad4D(perm[X + perm[iy1 + perm[iz1 + perm[iw1]]]], x, fy1, fz1, fw1)
+				)
+			)
+		),
+		_perlin_lerp(
+			t,
+			_perlin_lerp(
+				r,
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[ix1 + perm[Y + perm[Z + perm[W]]]], fx1, y, z, w),
+					_perlin_grad4D(perm[ix1 + perm[Y + perm[Z + perm[iw1]]]], fx1, y, z, fw1)
+				),
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[ix1 + perm[Y + perm[iz1 + perm[W]]]], fx1, y, fz1, w),
+					_perlin_grad4D(perm[ix1 + perm[Y + perm[iz1 + perm[iw1]]]], fx1, y, fz1, fw1)
+				)
+			),
+			_perlin_lerp(
+				r,
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[Z + perm[W]]]], fx1, fy1, z, w),
+					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[Z + perm[iw1]]]], fx1, fy1, z, fw1)
+				),
+				_perlin_lerp(
+					q,
+					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[iz1 + perm[W]]]], fx1, fy1, fz1, w),
+					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx1, fy1, fz1, fw1)
+				)
+			)
+		)
+	)
+
 _perlin_p = 2 * [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180]
 
 def _perlin_fade(t):
@@ -115,19 +225,31 @@ def _perlin_lerp(t, a, b):
 	""" Linear interpolation """
 	return a + t * (b - a)
 
+def _perlin_grad1D(hash, x):
+	h = hash & 15
+	grad = 1 + (h & 7)
+	if h & 8:
+		grad = -grad
+	return grad * x
+
 def _perlin_grad2D(hash, x, y):
-	""" Convert lo 4 bits of hash code into 12 gradient directions """
-	h = hash & 0xF
-	u = x if h < 0b1000 else y
-	v = y if h < 0b100 else (x if h == 0b1100 or h == 0b1110 else 0)
-	return (u if h & 0b1 == 0 else -u) + (v if h & 0b10 == 0 else -v)
+	h = hash & 7
+	u = x if h < 4 else y
+	v = y if h < 4 else x
+	return (-u if h & 1 else u) + (-2*v if h & 2 else 2 * v)
 
 def _perlin_grad3D(hash, x, y, z):
-	""" Convert lo 4 bits of hash code into 12 gradient directions """
-	h = hash & 0xF
-	u = x if h < 0b1000 else y
-	v = y if h < 0b100 else (x if h == 0b1100 or h == 0b1110 else z)
-	return (u if h & 0b1 == 0 else -u) + (v if h & 0b10 == 0 else -v)
+	h = hash & 15
+	u = x if h < 8 else y
+	v = y if h < 4 else (x if h == 12 or h == 14 else z)
+	return (-u if h & 1 else u) + (-v if h & 2 else v)
+
+def _perlin_grad4D(hash, x, y, z, t):
+	h = hash & 31
+	u = x if h < 24 else y
+	v = y if h < 16 else z
+	w = z if h < 8 else t
+	return (-u if h & 1 else u) + (-v if h & 2 else v) + (-w if h & 4 else w)
 
 # SIMPLEX ---------------------------------------------------------------------
 
