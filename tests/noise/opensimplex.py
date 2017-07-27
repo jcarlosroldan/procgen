@@ -8,7 +8,7 @@ from time import time
 from math import sin, pi
 
 def opensimplex2D_functional():
-	print("Testing octave known values from original Java OpenSimplex 2D")
+	print("Testing octave known values from OpenSimplex 2D")
 	assert opensimplex2D(.5, .5) == 0.2693285536052808, "Midpoint values don't match"
 	assert opensimplex2D(.01, .0001) == 0.017085976025220266, "Small values don't match"
 	assert opensimplex2D(1000.7, 1000.5) == -0.10185548597257466, "Big values don't match"
@@ -17,7 +17,7 @@ def opensimplex2D_functional():
 	print("\tAll values working properly")
 
 def opensimplex3D_functional():
-	print("Testing octave known values from original Java OpenSimplex 3D")
+	print("Testing octave known values from OpenSimplex 3D")
 	assert opensimplex3D(.5, .5, .5) == -0.3555445995145634, "Midpoint values don't match"
 	assert opensimplex3D(.0001, .001, .01) == -0.005761907273547035, "Small values don't match"
 	assert opensimplex3D(1000.7, 1000.5, 1000.3) == -0.39421579873144946, "Big values don't match"
@@ -26,7 +26,7 @@ def opensimplex3D_functional():
 	print("\tAll values working properly")
 
 def opensimplex4D_functional():
-	print("Testing octave known values from original Java OpenSimplex 4D")
+	print("Testing octave known values from OpenSimplex 4D")
 	assert opensimplex4D(.5, .5, .5, .5) == 0.2853462173341185, "Midpoint values don't match"
 	assert opensimplex4D(.0001, .001, .01, .1) == 0.057808284276409806, "Small values don't match"
 	assert opensimplex4D(1000.7, 1000.5, 1000.3, 1000.1) == -0.02126810949214044, "Big values don't match"
