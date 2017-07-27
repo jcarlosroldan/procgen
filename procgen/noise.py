@@ -1,5 +1,7 @@
+# GLOBAL ----------------------------------------------------------------------
+
 def combined(noise_function, x, y, z = None, w = None, octaves = 6, persistence = .5, lacunarity = 2):
-	""" Generate 3-D perlin noise. """
+	""" Generate noise by combining multiple frequencies of the same noise """
 	total = 0
 	freq = 1
 	amplitude = 1
@@ -23,7 +25,7 @@ from math import floor
 
 def perlin3D(x, y, z):
 	""" Generate 3D perlin noise.
-	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002 """
+	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
 	X = floor(x) & 0xFF
 	Y = floor(y) & 0xFF
 	Z = floor(z) & 0xFF
@@ -84,7 +86,7 @@ def _perlin_lerp(t, a, b):
 	return a + t * (b - a)
 
 def _perlin_grad(hash, x, y, z):
-	""" Convert lo 4 bits of hash code into 12 gradient directions. """
+	""" Convert lo 4 bits of hash code into 12 gradient directions """
 	h = hash & 0xF
 	u = x if h < 0b1000 else y
 	v = y if h < 0b100 else (x if h == 0b1100 or h == 0b1110 else z)
@@ -92,10 +94,11 @@ def _perlin_grad(hash, x, y, z):
 
 # SIMPLEX ---------------------------------------------------------------------
 
-from math import floor, sqrt
+from math import floor
 
 def simplex2D(x, y):
-	""" Generate 2-D simplex noise. A Python version of the Stefan Gustavson 2012 JAVA implementation. """
+	""" Generate 2D simplex noise
+	Taken from Stefan Gustavson 2012 Java implementation. """
 	s = (x + y) * _simplex_F2
 	i = floor(x + s)
 	j = floor(y + s)
@@ -149,7 +152,8 @@ def simplex2D(x, y):
 	return 70 * (n0 + n1 + n2)
 
 def simplex3D(x, y, z):
-	""" Generate 3-D simplex noise. A Python version of the Stefan Gustavson 2012 JAVA implementation."""	
+	""" Generate 3D simplex noise
+	Taken from Stefan Gustavson 2012 Java implementation. """	
 	s = (x + y + z) / 3
 	i = floor(x + s)
 	j = floor(y + s)
@@ -253,8 +257,8 @@ def _simplex_dot3D(g, x, y, z):
 # OPENSIMPLEX -----------------------------------------------------------------
 
 def opensimplex2D(x, y):
-	""" Generate 2D OpenSimplex noise.
-	Taken from Kurt Spencer Java implementation """
+	""" Generate 2D OpenSimplex noise
+	Taken from Kurt Spencer Java implementation. """
 	stretchOffset = (x + y) * -0.211324865405187
 	xs = x + stretchOffset
 	ys = y + stretchOffset
@@ -344,8 +348,8 @@ def opensimplex2D(x, y):
 	return value / 47
 
 def opensimplex3D(x, y, z):
-	""" Generate 3D OpenSimplex noise.
-	Taken from Kurt Spencer Java implementation """
+	""" Generate 3D OpenSimplex noise
+	Taken from Kurt Spencer Java implementation. """
 	stretchOffset = (x + y + z) * -1.0 / 6
 	xs = x + stretchOffset
 	ys = y + stretchOffset
@@ -803,8 +807,8 @@ def opensimplex3D(x, y, z):
 	return value / 103
 
 def opensimplex4D(x, y, z, w):
-	""" Generate 4D OpenSimplex noise.
-	Taken from Kurt Spencer Java implementation """
+	""" Generate 4D OpenSimplex noise
+	Taken from Kurt Spencer Java implementation. """
 	stretchOffset = (x + y + z + w) * -0.138196601125011
 	xs = x + stretchOffset
 	ys = y + stretchOffset
@@ -1903,14 +1907,17 @@ _opensimplex_gradients3D = [-11,4,4,-4,11,4,-4,4,11,11,4,4,4,11,4,4,4,11,-11,-4,
 _opensimplex_gradients4D = [3,1,1,1,1,3,1,1,1,1,3,1,1,1,1,3,-3,1,1,1,-1,3,1,1,-1,1,3,1,-1,1,1,3,3,-1,1,1,1,-3,1,1,1,-1,3,1,1,-1,1,3,-3,-1,1,1,-1,-3,1,1,-1,-1,3,1,-1,-1,1,3,3,1,-1,1,1,3,-1,1,1,1,-3,1,1,1,-1,3,-3,1,-1,1,-1,3,-1,1,-1,1,-3,1,-1,1,-1,3,3,-1,-1,1,1,-3,-1,1,1,-1,-3,1,1,-1,-1,3,-3,-1,-1,1,-1,-3,-1,1,-1,-1,-3,1,-1,-1,-1,3,3,1,1,-1,1,3,1,-1,1,1,3,-1,1,1,1,-3,-3,1,1,-1,-1,3,1,-1,-1,1,3,-1,-1,1,1,-3,3,-1,1,-1,1,-3,1,-1,1,-1,3,-1,1,-1,1,-3,-3,-1,1,-1,-1,-3,1,-1,-1,-1,3,-1,-1,-1,1,-3,3,1,-1,-1,1,3,-1,-1,1,1,-3,-1,1,1,-1,-3,-3,1,-1,-1,-1,3,-1,-1,-1,1,-3,-1,-1,1,-1,-3,3,-1,-1,-1,1,-3,-1,-1,1,-1,-3,-1,1,-1,-1,-3,-3,-1,-1,-1,-1,-3,-1,-1,-1,-1,-3,-1,-1,-1,-1,-3]
 
 def _opensimplex_extrapolate2D(xsb, ysb, dx, dy):
+	""" 2D extrapolation """
 	index = _opensimplex_perm[(_opensimplex_perm[xsb & 0xFF] + ysb) & 0xFF] & 0x0E
 	return _opensimplex_gradients2D[index] * dx + _opensimplex_gradients2D[index + 1] * dy
 
 def _opensimplex_extrapolate3D(xsb, ysb, zsb, dx, dy, dz):
+	""" 3D extrapolation """
 	index = _opensimplex_perm3D[(_opensimplex_perm[(_opensimplex_perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF]
 	return _opensimplex_gradients3D[index] * dx + _opensimplex_gradients3D[index + 1] * dy + _opensimplex_gradients3D[index + 2] * dz
 
 def _opensimplex_extrapolate4D(xsb, ysb, zsb, wsb, dx, dy, dz, dw):
+	""" 4D extrapolation """
 	index = _opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF] + wsb) & 0xFF] & 0xFC
 	return _opensimplex_gradients4D[index] * dx + _opensimplex_gradients4D[index + 1] * dy + _opensimplex_gradients4D[index + 2] * dz + _opensimplex_gradients4D[index + 3] * dw
 
