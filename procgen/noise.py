@@ -24,6 +24,35 @@ def combined(noise_function, x, y, z = None, w = None, octaves = 6, persistence 
 
 from math import floor
 
+def perlin2D(x, y):
+	""" Generate 2D perlin noise.
+	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
+	X = floor(x) & 0xFF
+	Y = floor(y) & 0xFF
+	
+	x = x % 1
+	y = y % 1
+	
+	u = _perlin_fade(x)
+	v = _perlin_fade(y)
+	
+	A = _perlin_p[X] + Y
+	B = _perlin_p[X + 1] + Y
+	
+	return _perlin_lerp(
+			v,
+			_perlin_lerp(
+				u,
+				_perlin_grad2D(_perlin_p[_perlin_p[A]], x, y),
+				_perlin_grad2D(_perlin_p[_perlin_p[B]], x - 1, y)
+			),
+			_perlin_lerp(
+				u,
+				_perlin_grad2D(_perlin_p[_perlin_p[A + 1]], x, y - 1),
+				_perlin_grad2D(_perlin_p[_perlin_p[B + 1]], x - 1, y - 1)
+			)
+		)
+
 def perlin3D(x, y, z):
 	""" Generate 3D perlin noise.
 	Taken from Improving Noise by Ken Perlin, SIGGRAPH 2002. """
@@ -52,26 +81,26 @@ def perlin3D(x, y, z):
 			v,
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AA], x, y, z),
-				_perlin_grad(_perlin_p[BA], x - 1, y, z)
+				_perlin_grad3D(_perlin_p[AA], x, y, z),
+				_perlin_grad3D(_perlin_p[BA], x - 1, y, z)
 			),
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AB], x, y - 1, z),
-				_perlin_grad(_perlin_p[BB], x - 1, y - 1, z)
+				_perlin_grad3D(_perlin_p[AB], x, y - 1, z),
+				_perlin_grad3D(_perlin_p[BB], x - 1, y - 1, z)
 			)
 		),
 		_perlin_lerp(
 			v,
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AA + 1], x, y, z - 1),
-				_perlin_grad(_perlin_p[BA + 1], x - 1, y, z - 1)
+				_perlin_grad3D(_perlin_p[AA + 1], x, y, z - 1),
+				_perlin_grad3D(_perlin_p[BA + 1], x - 1, y, z - 1)
 			),
 			_perlin_lerp(
 				u,
-				_perlin_grad(_perlin_p[AB + 1], x, y - 1, z - 1),
-				_perlin_grad(_perlin_p[BB + 1], x - 1, y - 1, z - 1)
+				_perlin_grad3D(_perlin_p[AB + 1], x, y - 1, z - 1),
+				_perlin_grad3D(_perlin_p[BB + 1], x - 1, y - 1, z - 1)
 			)
 		)
 	)
@@ -86,7 +115,14 @@ def _perlin_lerp(t, a, b):
 	""" Linear interpolation """
 	return a + t * (b - a)
 
-def _perlin_grad(hash, x, y, z):
+def _perlin_grad2D(hash, x, y):
+	""" Convert lo 4 bits of hash code into 12 gradient directions """
+	h = hash & 0xF
+	u = x if h < 0b1000 else y
+	v = y if h < 0b100 else (x if h == 0b1100 or h == 0b1110 else 0)
+	return (u if h & 0b1 == 0 else -u) + (v if h & 0b10 == 0 else -v)
+
+def _perlin_grad3D(hash, x, y, z):
 	""" Convert lo 4 bits of hash code into 12 gradient directions """
 	h = hash & 0xF
 	u = x if h < 0b1000 else y
