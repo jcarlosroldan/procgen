@@ -35,9 +35,9 @@ def perlin1D(x):
 
 	s = _perlin_fade(x)
 
-	n0 = _perlin_grad1D(perm[X], x)
-	n1 = _perlin_grad1D(perm[A], u)
-	return _perlin_lerp(s, n0, n1)
+	n0 = _perlin_grad1D(_perlin_p[X], x)
+	n1 = _perlin_grad1D(_perlin_p[A], u)
+	return 0.188 * _perlin_lerp(s, n0, n1)
 
 def perlin2D(x, y):
 	""" Generate 2D perlin noise.
@@ -54,7 +54,7 @@ def perlin2D(x, y):
 	A = _perlin_p[X] + Y
 	B = _perlin_p[X + 1] + Y
 	
-	return _perlin_lerp(
+	return 0.507 * _perlin_lerp(
 			v,
 			_perlin_lerp(
 				u,
@@ -90,7 +90,7 @@ def perlin3D(x, y, z):
 	BA = _perlin_p[B] + Z
 	BB = _perlin_p[B + 1] +Z
 	
-	return _perlin_lerp(
+	return 0.936 * _perlin_lerp(
 		w,
 		_perlin_lerp(
 			v,
@@ -153,7 +153,7 @@ def perlin4D(x, y, z, w):
 	t = _perlin_fade(y)
 	s = _perlin_fade(x)
 
-	return _perlin_lerp(
+	return 0.87 * _perlin_lerp(
 		s,
 		_perlin_lerp(
 			t,
@@ -161,26 +161,26 @@ def perlin4D(x, y, z, w):
 				r,
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[X + perm[Y + perm[Z + perm[W]]]], x, y, z, w),
-					_perlin_grad4D(perm[X + perm[Y + perm[Z + perm[iw1]]]], x, y, z, fw1)
+					_perlin_grad4D(_perlin_p[X + _perlin_p[Y + _perlin_p[Z + _perlin_p[W]]]], x, y, z, w),
+					_perlin_grad4D(_perlin_p[X + _perlin_p[Y + _perlin_p[Z + _perlin_p[iw1]]]], x, y, z, fw1)
 				),
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[X + perm[Y + perm[iz1 + perm[W]]]], x, y, fz1, w),
-					_perlin_grad4D(perm[X + perm[Y + perm[iz1 + perm[iw1]]]], x, y, fz1, fw1)
+					_perlin_grad4D(_perlin_p[X + _perlin_p[Y + _perlin_p[iz1 + _perlin_p[W]]]], x, y, fz1, w),
+					_perlin_grad4D(_perlin_p[X + _perlin_p[Y + _perlin_p[iz1 + _perlin_p[iw1]]]], x, y, fz1, fw1)
 				)
 			),
 			_perlin_lerp(
 				r,
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[X + perm[iy1 + perm[Z + perm[W]]]], x, fy1, z, w),
-					_perlin_grad4D(perm[X + perm[iy1 + perm[Z + perm[iw1]]]], x, fy1, z, fw1)
+					_perlin_grad4D(_perlin_p[X + _perlin_p[iy1 + _perlin_p[Z + _perlin_p[W]]]], x, fy1, z, w),
+					_perlin_grad4D(_perlin_p[X + _perlin_p[iy1 + _perlin_p[Z + _perlin_p[iw1]]]], x, fy1, z, fw1)
 				),
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[X + perm[iy1 + perm[iz1 + perm[W]]]], x, fy1, fz1, w),
-					_perlin_grad4D(perm[X + perm[iy1 + perm[iz1 + perm[iw1]]]], x, fy1, fz1, fw1)
+					_perlin_grad4D(_perlin_p[X + _perlin_p[iy1 + _perlin_p[iz1 + _perlin_p[W]]]], x, fy1, fz1, w),
+					_perlin_grad4D(_perlin_p[X + _perlin_p[iy1 + _perlin_p[iz1 + _perlin_p[iw1]]]], x, fy1, fz1, fw1)
 				)
 			)
 		),
@@ -190,26 +190,26 @@ def perlin4D(x, y, z, w):
 				r,
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[ix1 + perm[Y + perm[Z + perm[W]]]], fx1, y, z, w),
-					_perlin_grad4D(perm[ix1 + perm[Y + perm[Z + perm[iw1]]]], fx1, y, z, fw1)
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[Y + _perlin_p[Z + _perlin_p[W]]]], fx1, y, z, w),
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[Y + _perlin_p[Z + _perlin_p[iw1]]]], fx1, y, z, fw1)
 				),
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[ix1 + perm[Y + perm[iz1 + perm[W]]]], fx1, y, fz1, w),
-					_perlin_grad4D(perm[ix1 + perm[Y + perm[iz1 + perm[iw1]]]], fx1, y, fz1, fw1)
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[Y + _perlin_p[iz1 + _perlin_p[W]]]], fx1, y, fz1, w),
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[Y + _perlin_p[iz1 + _perlin_p[iw1]]]], fx1, y, fz1, fw1)
 				)
 			),
 			_perlin_lerp(
 				r,
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[Z + perm[W]]]], fx1, fy1, z, w),
-					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[Z + perm[iw1]]]], fx1, fy1, z, fw1)
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[iy1 + _perlin_p[Z + _perlin_p[W]]]], fx1, fy1, z, w),
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[iy1 + _perlin_p[Z + _perlin_p[iw1]]]], fx1, fy1, z, fw1)
 				),
 				_perlin_lerp(
 					q,
-					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[iz1 + perm[W]]]], fx1, fy1, fz1, w),
-					_perlin_grad4D(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx1, fy1, fz1, fw1)
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[iy1 + _perlin_p[iz1 + _perlin_p[W]]]], fx1, fy1, fz1, w),
+					_perlin_grad4D(_perlin_p[ix1 + _perlin_p[iy1 + _perlin_p[iz1 + _perlin_p[iw1]]]], fx1, fy1, fz1, fw1)
 				)
 			)
 		)
