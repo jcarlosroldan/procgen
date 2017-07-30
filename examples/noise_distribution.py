@@ -6,13 +6,13 @@ from random import random
 REPETITIONS = 10**6
 RANGE = 10**8
 
-from procgen.noise import perlin1D, perlin2D, perlin3D, perlin4D, simplex2D, simplex3D, opensimplex2D, opensimplex3D, opensimplex4D
+from procgen.noise import perlin1D, perlin2D, perlin3D, perlin4D, simplex2D, simplex3D, simplex4D, opensimplex2D, opensimplex3D, opensimplex4D
 
 to_test = [
 	[perlin1D],
 	[perlin2D, simplex2D, opensimplex2D],
 	[perlin3D, simplex3D, opensimplex3D],
-	[perlin4D, opensimplex4D]
+	[perlin4D, simplex4D, opensimplex4D]
 ]
 
 print("   NAME         MIN        MAX         AVG")
