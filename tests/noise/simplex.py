@@ -28,7 +28,7 @@ def simplex3D_functional():
 def simplex4D_functional():
 	print("Testing octave known values from Simplex 4D")
 	assert simplex4D(.5, .5, .5, .5) == -0.17136317120636763, "Midpoint values don't match"
-	assert simplex4D(.0001, .001, .01, .1) == 0.00455884877874096, "Small values don't match"
+	assert simplex4D(.0001, .001, .01, .1) == 0.36290867797937737, "Small values don't match"
 	assert simplex4D(1000.7, 1000.5, 1000.3, 1000.1) == -0.5058875159738829, "Big values don't match"
 	assert simplex4D(18, 27, 31, 501) == -0.2979980307818446, "Integer values don't match"
 	assert simplex4D(-12.3, -4.56, -.789, .818) == 0.09439190689205242, "Negative values don't match"
