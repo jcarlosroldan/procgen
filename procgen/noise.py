@@ -2216,6 +2216,14 @@ def _opensimplex_extrapolate4D(xsb, ysb, zsb, wsb, dx, dy, dz, dw):
 	index = _opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF] + wsb) & 0xFF] & 0xFC
 	return _opensimplex_gradients4D[index] * dx + _opensimplex_gradients4D[index + 1] * dy + _opensimplex_gradients4D[index + 2] * dz + _opensimplex_gradients4D[index + 3] * dw
 
+# WHITE -----------------------------------------------------------------------
+
+from math import floor, sin
+
+def white(x, y = 0, z = 0, w = 0):
+	""" Generate 1D, 2D, 3D or 4D white noise."""
+	return 2 * ((sin(12.9898 * x + 78.233 * y + 17.3392 * z + 47.743 * w) * 43758.5453) % 1) - 1
+
 # WAVELET ---------------------------------------------------------------------
 
 # VORONOI ---------------------------------------------------------------------
