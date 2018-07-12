@@ -1,5 +1,6 @@
-from os import chdir
-chdir("../..")
+from os import chdir, path
+from sys import path as spath
+spath.append(path.abspath('../..'))
 
 from procgen.noise import combined, simplex2D, simplex3D, simplex4D
 import matplotlib.pyplot as plt
@@ -38,7 +39,7 @@ def simplex2D_performance():
 	print("Testing time to fill a 200x200 array with default parameters")
 	base = time()
 	N = 200
-	pmap = [[combined(simplex2D, x/N, y/N) for x in range(N)] for y in range(N)]
+	pmap = [[combined(simplex2D, x / N, y / N) for x in range(N)] for y in range(N)]
 	elapsed = time() - base
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 1.8
@@ -47,7 +48,7 @@ def simplex2D_performance2():
 	print("Testing time to fill a 70x70 array with 15 octaves")
 	base = time()
 	N = 70
-	pmap = [[combined(simplex2D, x/N, y/N, octaves = 50) for x in range(N)] for y in range(N)]
+	pmap = [[combined(simplex2D, x / N, y / N, octaves=15) for x in range(N)] for y in range(N)]
 	elapsed = time() - base
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 1.8
@@ -56,7 +57,7 @@ def simplex3D_performance():
 	print("Testing time to fill a 30x30x30 array with default parameters")
 	base = time()
 	N = 30
-	pmap = [[[combined(simplex3D, x/N, y/N, z/N) for x in range(N)] for y in range(N)] for z in range(N)]
+	pmap = [[[combined(simplex3D, x / N, y / N, z / N) for x in range(N)] for y in range(N)] for z in range(N)]
 	elapsed = time() - base
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 2.5
@@ -65,7 +66,7 @@ def simplex4D_performance():
 	print("Testing time to fill a 10x10x10x10 array with default parameters")
 	base = time()
 	N = 10
-	pmap = [[[[combined(simplex4D, x/N, y/N, z/N, w/N) for x in range(N)] for y in range(N)] for z in range(N)] for w in range(N)]
+	pmap = [[[[combined(simplex4D, x / N, y / N, z / N, w / N) for x in range(N)] for y in range(N)] for z in range(N)] for w in range(N)]
 	elapsed = time() - base
 	print("\tElapsed %s seconds" % elapsed)
 	assert elapsed < 1.8
@@ -73,27 +74,27 @@ def simplex4D_performance():
 def simplex2D_subjective():
 	print("Displaying 2D simplex output")
 	N = 100
-	pmap = [[combined(simplex2D, x/N, y/N) for x in range(N)] for y in range(N)]
-	
+	pmap = [[combined(simplex2D, x / N, y / N) for x in range(N)] for y in range(N)]
+
 	plt.subplot(221)
 	plt.title("6 octaves")
-	plt.imshow(pmap, cmap = 'plasma', interpolation = 'nearest')
-	
+	plt.imshow(pmap, cmap='plasma', interpolation='nearest')
+
 	plt.subplot(222)
 	plt.title("1 octave")
-	pmap = [[combined(simplex2D, 6*x/N, 6*y/N, octaves = 1) for x in range(N)] for y in range(N)]
-	plt.imshow(pmap, cmap = 'plasma', interpolation = 'nearest')
-	
+	pmap = [[combined(simplex2D, 6 * x / N, 6 * y / N, octaves=1) for x in range(N)] for y in range(N)]
+	plt.imshow(pmap, cmap='plasma', interpolation='nearest')
+
 	plt.subplot(223)
 	plt.title("4 octaves, marbled")
-	mpmap = [[sin(1.6 * 2 * pi * combined(simplex2D, 6*x/N, 6*y/N, octaves = 4)) for x in range(N)] for y in range(N)]
-	plt.imshow(mpmap, cmap = 'plasma', interpolation = 'nearest')
-	
+	mpmap = [[sin(1.6 * 2 * pi * combined(simplex2D, 6 * x / N, 6 * y / N, octaves=4)) for x in range(N)] for y in range(N)]
+	plt.imshow(mpmap, cmap='plasma', interpolation='nearest')
+
 	plt.subplot(224)
 	plt.title("15 octaves, crinkled")
-	cpmap = [[combined(simplex2D, 10*x/N, 10*y/N, octaves = 15) for x in range(N)] for y in range(N)]
-	plt.imshow(cpmap, cmap = 'plasma', interpolation = 'nearest')
-	
+	cpmap = [[combined(simplex2D, 10 * x / N, 10 * y / N, octaves=15) for x in range(N)] for y in range(N)]
+	plt.imshow(cpmap, cmap='plasma', interpolation='nearest')
+
 	plt.show()
 
 simplex2D_functional()
