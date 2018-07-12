@@ -5,7 +5,7 @@ spath.append(path.abspath('..'))
 from random import random
 
 REPETITIONS = 10**6
-RANGE = 10**6
+RANGE = 10**8
 
 from procgen.noise import perlin1D, perlin2D, perlin3D, perlin4D, simplex2D, simplex3D, simplex4D, opensimplex2D, opensimplex3D, opensimplex4D
 
