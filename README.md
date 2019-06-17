@@ -1,7 +1,7 @@
 Procgen: Procedural generation library
 ======================================
 
-Procgen is a fast general purpose procedural generation library for Python. It can be used for a widde range of purposes, from terrain generation to generative art, both in 2D and 3D worlds.
+Procgen is a fast general purpose procedural generation library for Python. It can be used for a wide range of purposes, from terrain generation to generative art, both in 2D and 3D worlds.
 
 **Warning:** This library is currently under development. Several API changes are expected until an stable version is reached.
 
