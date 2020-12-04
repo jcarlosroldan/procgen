@@ -2,16 +2,18 @@ from math import floor, sin
 
 # --- global ------------------------------------------------------------------
 
-def combined(noise_function, x, y, z=None, w=None, octaves=6, persistence=.5, lacunarity=2):
+def combined(noise_function, x, y=None, z=None, w=None, octaves=6, persistence=.5, lacunarity=2):
 	""" Generate noise by combining multiple frequencies of the same noise
 	DISCLAIMER: This is a temporary solution, octaves, persistence and lacunarity will be noise function parameters in the future. """
 	total = 0
 	freq = 1
 	amplitude = 1
 	max_val = 0
-	for i in range(octaves):
-		if w == None:
-			if z == None:
+	for _ in range(octaves):
+		if w is None:
+			if y is None:
+				total += noise_function(x * freq) * amplitude
+			elif z is None:
 				total += noise_function(x * freq, y * freq) * amplitude
 			else:
 				total += noise_function(x * freq, y * freq, z * freq) * amplitude
