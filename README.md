@@ -1,23 +1,13 @@
-Procgen: Procedural generation library
-======================================
+# Procgen: Procedural generation library
 
-Procgen is a fast general purpose procedural generation library for Python. It can be used for a wide range of purposes, from terrain generation to generative art, both in 2D and 3D worlds.
-
-**Warning:** This library is currently under development. Several API changes are expected until an stable version is reached.
-
-## Requirements
-
-* Python 3.2+
-* Numpy 1.9+
-* Works on Linux, Windows, Mac OSX, BSD
+Procgen is a fast general purpose procedural generation library for Python 3 that works on Linux, Windows, Mac OS and BSD. It can be used for a wide range of purposes, from terrain generation to generative art, both in 2D and 3D worlds.
 
 ## Install
 
 To install Procgen, simply:
 
 ```
-pip install numpy -U
-git clone https://github.com/juancroldan/procgen.git
+pip install git+https://github.com/juancroldan/procgen
 ```
 
 Soon, you will be able to use pip to install this library.
@@ -28,7 +18,7 @@ Since big API changes are expected, documentation is not available yet. We will 
 
 ## Contribute
 
-By January 2018, a 1.0 stable version will be released, a proper branch workflow will be used, and contributions will be open. Adventurous coders can contact via mail at `juancarlos @ sevilla . es` to contribute in this wild, unstable stage.
+By 2021, a 1.0 stable version will be released, a proper branch workflow will be used, and contributions will be open. Adventurous coders can contact via mail at `juancarlos @ sevilla . es` to contribute in this wild, unstable stage.
 
 ## Current work
 
