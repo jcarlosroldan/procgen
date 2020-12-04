@@ -1,4 +1,6 @@
-# GLOBAL ----------------------------------------------------------------------
+from math import floor, sin
+
+# --- global ------------------------------------------------------------------
 
 def combined(noise_function, x, y, z=None, w=None, octaves=6, persistence=.5, lacunarity=2):
 	""" Generate noise by combining multiple frequencies of the same noise
@@ -20,9 +22,7 @@ def combined(noise_function, x, y, z=None, w=None, octaves=6, persistence=.5, la
 		freq *= lacunarity
 	return total / max_val
 
-# PERLIN ----------------------------------------------------------------------
-
-from math import floor
+# --- perlin ------------------------------------------------------------------
 
 def perlin1D(x):
 	""" Generate 1D perlin noise.
@@ -249,9 +249,7 @@ def _perlin_grad4D(hash, x, y, z, t):
 	w = z if h < 8 else t
 	return (-u if h & 1 else u) + (-v if h & 2 else v) + (-w if h & 4 else w)
 
-# SIMPLEX ---------------------------------------------------------------------
-
-from math import floor
+# --- simplex -----------------------------------------------------------------
 
 def simplex2D(x, y):
 	""" Generate 2D simplex noise
@@ -547,7 +545,7 @@ def _simplex_dot4D(g, x, y, z, w):
 	""" 3D dot product """
 	return g[0] * x + g[1] * y + g[2] * z + g[3] * w
 
-# OPENSIMPLEX -----------------------------------------------------------------
+# --- opensimplex -------------------------------------------------------------
 
 def opensimplex2D(x, y):
 	""" Generate 2D OpenSimplex noise
@@ -2211,20 +2209,18 @@ def _opensimplex_extrapolate4D(xsb, ysb, zsb, wsb, dx, dy, dz, dw):
 	index = _opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[(_opensimplex_perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF] + wsb) & 0xFF] & 0xFC
 	return _opensimplex_gradients4D[index] * dx + _opensimplex_gradients4D[index + 1] * dy + _opensimplex_gradients4D[index + 2] * dz + _opensimplex_gradients4D[index + 3] * dw
 
-# WHITE -----------------------------------------------------------------------
-
-from math import floor, sin
+# --- white -------------------------------------------------------------------
 
 def white(x, y=0, z=0, w=0):
 	""" Generate 1D, 2D, 3D or 4D white noise."""
 	return 2 * ((sin(12.9898 * x + 78.233 * y + 17.3392 * z + 47.743 * w) * 43758.5453) % 1) - 1
 
-# WAVELET ---------------------------------------------------------------------
+# --- wavelet -----------------------------------------------------------------
 
-# VORONOI ---------------------------------------------------------------------
+# --- voronoi -----------------------------------------------------------------
 
-# WORLEY ----------------------------------------------------------------------
+# --- worley ------------------------------------------------------------------
 
-# BILLOW ----------------------------------------------------------------------
+# --- billow ------------------------------------------------------------------
 
-# RIDGED ----------------------------------------------------------------------
+# --- ridged ------------------------------------------------------------------
